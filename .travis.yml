@@ -88,9 +88,12 @@ pkg_src_zeromq_ubuntu16: &pkg_src_zeromq_ubuntu16
 # Note: refer to ubuntu16 if you use dist==xenial
 # Also note that as of early 2017, either dist==trusty or services==docker
 # is needed for C++11 support; docker envs are usually faster to start up
+# Also note that this defines the "pkg_deps_common" for expansions below.
+# Note that with current implementation, this effectively hardcodes
+# the use of specifically 4.9, not allowing for "4.9 or newer".
 addons:
   apt:
-    sources: 
+    sources:
     - *pkg_src_zeromq_ubuntu16
     - ubuntu-toolchain-r-test
     packages: &pkg_deps_common
@@ -111,8 +114,6 @@ matrix:
         packages:
         - *pkg_deps_common
         - *pkg_deps_doctools
-        - gcc-4.9
-        - g++-4.9
   - env: BUILD_TYPE=valgrind
     os: linux
     dist: xenial
@@ -124,8 +125,6 @@ matrix:
         packages:
         - valgrind
         - *pkg_deps_common
-        - gcc-4.9
-        - g++-4.9
   - env: BUILD_TYPE=default ADDRESS_SANITIZER=enabled
     os: linux
     dist: xenial
@@ -136,9 +135,6 @@ matrix:
         - ubuntu-toolchain-r-test
         packages:
         - *pkg_deps_common
-        - gcc-4.9
-        - g++-4.9
-
 ### Note: we don't use CMake
 #  - env: BUILD_TYPE=cmake DO_CLANG_FORMAT_CHECK=1 CLANG_FORMAT=clang-format-5.0
 # For non-cmake users, there is an autotools solution with a bit more overhead
