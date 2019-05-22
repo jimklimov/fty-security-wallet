@@ -1275,10 +1275,16 @@ AS_IF([test "x$enable_Werror" = "xyes" || test "x$enable_Werror" = "xauto"],
 AS_IF([test -n "$CXX"],[AS_IF([$CXX --version 2>&1 | grep 'Free Software Foundation' > /dev/null && test "x$GCC" = "xyes"],
     [AC_MSG_CHECKING([for GNU C++11 support level expected by gcc-4.9 release or newer])
      CXXFLAGS="$CXXFLAGS --std=c++11"
+     AC_LANG_PUSH([C++])
      AC_TRY_RUN([/* Note: private macros in use, test can break over time */
 #include <regex>
 
-#if __cplusplus >= 201103L &&                               (!defined(__GLIBCXX__) || (__cplusplus >= 201402L) ||   (defined(_GLIBCXX_REGEX_DFS_QUANTIFIERS_LIMIT) ||   defined(_GLIBCXX_REGEX_STATE_LIMIT)  ||   (defined(_GLIBCXX_RELEASE)  &&   _GLIBCXX_RELEASE > 4)))
+#if __cplusplus >= 201103L &&                             \
+    (!defined(__GLIBCXX__) || (__cplusplus >= 201402L) || \
+        (defined(_GLIBCXX_REGEX_DFS_QUANTIFIERS_LIMIT) || \
+         defined(_GLIBCXX_REGEX_STATE_LIMIT)           || \
+             (defined(_GLIBCXX_RELEASE)                && \
+             _GLIBCXX_RELEASE > 4)))
 #define HAVE_WORKING_REGEX 1
 #else
 #define HAVE_WORKING_REGEX 0
@@ -1298,6 +1304,7 @@ int main() {
   return result ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 ], AC_MSG_RESULT([ok]), AC_MSG_ERROR([test for std::regex failed]) )
+     AC_LANG_POP([C++])
     ]
 )])
 
