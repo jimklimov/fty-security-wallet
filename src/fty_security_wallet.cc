@@ -168,6 +168,8 @@ int main (int argc, char *argv [])
         log_info ("Secw Interrupted ...");
         //notify systemd that the service is stopping, so that depending units can be stopped too
         sd_notify(0, "STOPPING=1");
+        //TODO: somehow wait here to make sure all consumers have disconnected?
+
         //actually stop security wallet
         agentSecw.requestStop();
         agentSecwThread.join();
